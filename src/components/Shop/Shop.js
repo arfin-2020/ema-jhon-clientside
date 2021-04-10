@@ -13,7 +13,7 @@ const Shop = () => {
     const [cart, setCart] = useState([]);
     const [search,setSearch] = useState('');
     useEffect(()=>{
-        fetch('http://localhost:5000/products?search=' + search)
+        fetch('https://secret-savannah-26127.herokuapp.com/products?search=' + search)
         .then(res =>res.json())
         .then(data =>setProducts(data))
     },[search])
