@@ -20,6 +20,7 @@ export const handleGoogleSignIn = () => {
         photo: photoURL,
         success: true
       };
+      setuserToken()
       return signedInUser;
     })
     .catch(err => {
@@ -27,7 +28,13 @@ export const handleGoogleSignIn = () => {
       console.log(err.message);
     })
   }
-
+  const setuserToken = () =>{
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+      sessionStorage.setItem('token',idToken);
+    }).catch(function(error) {
+      console.log(error);
+    });
+  }
   export const handleFbSignIn = () => {
     const fbProvider = new firebase.auth.FacebookAuthProvider();
     return firebase.auth().signInWithPopup(fbProvider).then(function(result) {

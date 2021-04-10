@@ -5,17 +5,18 @@ import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
 import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
 import { Link } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
 
 const Shop = () => {
     // const first10 = fakeData.slice(0,10);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
-    
+    const [search,setSearch] = useState('');
     useEffect(()=>{
-        fetch('https://secret-savannah-26127.herokuapp.com/products')
+        fetch('http://localhost:5000/products?search=' + search)
         .then(res =>res.json())
         .then(data =>setProducts(data))
-    },[])
+    },[search])
     useEffect(()=>{
         const savedCart = getDatabaseCart();
         const productKeys = Object.keys(savedCart);
@@ -28,6 +29,11 @@ const Shop = () => {
         .then(res =>res.json())
         .then(data => setCart(data))
     }, [])
+
+    const handleSearch = (event) =>{
+        setSearch(event.target.value);
+        // console.log(search);
+    }
 
     const handleAddProduct = (product) =>{
         const toBeAddedKey = product.key;
@@ -51,6 +57,12 @@ const Shop = () => {
     return (
         <div className="twin-container">
             <div className="product-container">
+            <input style={{ height:'40px', width:'250px'}} type="text" onBlur={handleSearch} placeholder = 'search' className="product-search"/>
+            {
+            products.length === 0 && <p style = {{color: 'green',textAlign: 'center'}}><Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+            </Spinner></p>
+            }
                 {
                     products.map(pd => <Product 
                         key={pd.key}
